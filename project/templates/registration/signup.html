@@ -1,0 +1,19 @@
+{% extends 'default.html' %}
+{% block main %}
+    <form class="auth-form" method="post">
+        {% csrf_token %}
+        {% if form.errors %}
+            <div class="form-errors">{{ form.non_field_errors }}</div>
+            <div class="form-errors">{{ form.username.errors }}</div>
+            <div class="form-errors">{{ form.password2.errors }}</div>
+        {% endif %}
+            <div class="form-label">{{ form.username.label }}</div>
+            <div class="form-input">{{ form.username }}</div>
+            <div class="form-label">{{ form.password1.label }}</div>
+            <div class="form-input">{{ form.password1 }}</div>
+            <div class="form-label">{{ form.password2.label }}</div>
+            <div class="form-input">{{ form.password2 }}</div>
+            <button class="form-btn" type="submit">Register</button>
+
+    </form>
+{% endblock main %}

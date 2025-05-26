@@ -1,0 +1,17 @@
+$primary-color: #0522b3;
+$footer-background: #4be7f2;
+$header-background: #e0b61b;
+$footer-color: #c20c2d;
+$header-color: #061e96;
+$primary-size: 16px;
+$button-background: #048a81;
+$button-color: #b80748;
+
+@font-face {
+    font-family: 'Primary';
+    src: url("/static/fonts/WoodenShipDecorated.ttf");
+}
+
+@font-face {
+    font-family: 'Secondary';
+    src: url("/static/fonts/Cony.ttf"); }
