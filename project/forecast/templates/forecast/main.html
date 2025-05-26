@@ -13,6 +13,9 @@
     <h2 class="message-header">Прогноз погоды на {{ hour }}:00 в городе {{ city }}</h2>
     <h2 class="message-header">{{ temperature }} градусов по цельсию</h2>
     {% else%}
+        {% if error %}
+        <div class="message">Указанный город не найден</div>
+        {% endif %}
     <div class="message">Укажите город для отображения прогноза погоды</div>
     {% endif %}
     {% else%}
