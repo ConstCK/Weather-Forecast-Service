@@ -125,6 +125,18 @@ body {
       text-align: center; }
     body .main h2 {
       margin: 10px auto; }
+    body .main .form-errors {
+      margin: 10px;
+      color: red;
+      font-size: 22px; }
+    body .main .form-label {
+      font-size: 24px;
+      margin: 10px; }
+    body .main .form-input {
+      margin: 5px; }
+      body .main .form-input input {
+        padding: 3px 10px;
+        font-size: 24px; }
     body .main .forecast-form {
       font-size: 48px; }
       body .main .forecast-form p {

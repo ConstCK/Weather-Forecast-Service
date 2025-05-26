@@ -2,9 +2,10 @@
 {% block main %}
     <form class="auth-form" method="post">
         {% csrf_token %}
-        <div class="auth-fields">
-            {{ form.as_p }}
-        </div>
+        <div class="form-label">{{ form.username.label }}</div>
+        <div class="form-input">{{ form.username }}</div>
+        <div class="form-label">{{ form.password.label }}</div>
+        <div class="form-input">{{ form.password }}</div>
         <button class="auth-btn" type="submit">Логин</button>
     </form>
 {% endblock main %}
