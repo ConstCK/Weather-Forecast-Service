@@ -24,6 +24,8 @@ INSTALLED_APPS = [
     'sass_processor',
     'forecast.apps.ForecastConfig',
     'accounts.apps.AccountsConfig',
+    'dal',
+    'dal_select2',
 ]
 
 MIDDLEWARE = [

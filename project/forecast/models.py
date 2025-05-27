@@ -20,3 +20,5 @@ class ForecastRequest(models.Model):
         ordering = ['-created_at']
         verbose_name = "Запрос прогноза"
         verbose_name_plural = "Запросы прогноза"
+
+

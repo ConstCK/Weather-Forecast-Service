@@ -1,8 +1,13 @@
+from dal import autocomplete
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import JsonResponse
 from django.shortcuts import render
 
+from .constants import MESSAGES
+from .models import ForecastRequest
 from .services import CityService, ForecastService
-from .forms import ForecastOrderForm
+from .forms import ForecastRequestForm
 
 city_service = CityService()
 forecast_service = ForecastService()
@@ -12,46 +17,43 @@ def main(request):
     try:
         user = User.objects.get(username=request.user)
         last_city = city_service.last_city_info(user)
-    except Exception:
+    except ObjectDoesNotExist:
         last_city = ''
 
-    form = ForecastOrderForm({'city': last_city})
+    form = ForecastRequestForm({'city': last_city})
     if request.method == "POST":
-        form = ForecastOrderForm(request.POST)
+        form = ForecastRequestForm(request.POST)
         if form.is_valid():
             result = None
             user = User.objects.get(username=request.user)
             city = request.POST.get('city')
-            # Проверка есть ли координаты города в БД и добавление нового запроса
+            # Проверка есть ли координаты города в БД и добавление данных в случае отсутствия
             if city_service.get_coords_from_db(city):
                 result = forecast_service.get_weather_forecast(
                     str(city_service.get_coords_from_db(city).get('latitude')),
                     str(city_service.get_coords_from_db(city).get('longitude'))
                 )
-                # forecast_service.add_data_to_db(
-                #     user,
-                #     city,
-                #     str(
-                #         city_service.get_coords_from_db(city).get('latitude')
-                #         ),
-                #     str(
-                #         city_service.get_coords_from_db(city).get('longitude')
-                #         )
-                #     )
+                forecast_service.add_data_to_db(
+                    user,
+                    city,
+                    str(city_service.get_coords_from_db(city).get('latitude')),
+                    str(city_service.get_coords_from_db(city).get('longitude'))
+                )
 
             else:
                 coords = city_service.get_coords_by_city(city)
                 if coords:
                     lat = coords.get('latitude')
                     lon = coords.get('longitude')
-                    result = forecast_service.get_weather_forecast(lat, lon)
 
                     forecast_service.add_data_to_db(
                         user,
                         city,
                         str(lat),
                         str(lon)
-                        )
+                    )
+
+                    result = forecast_service.get_weather_forecast(lat, lon)
 
             if result:
                 return render(
@@ -61,52 +63,60 @@ def main(request):
                         'hour': result.get('hour'),
                         'temperature': result.get('temperature'),
                         'form': form,
-                        'title': 'Welcome to weather forecast!'
+                        'title': MESSAGES.get('main_header')
                     }
-                    )
+                )
             return render(
                 request, 'main.html',
-
                 context={
                     'form': form,
-                    'error': 'Указанный город не найден'
+                    'error': MESSAGES.get('no_city_error')
                 }
             )
+
     return render(
         request, 'main.html',
-        context={'form': form, 'title': 'Welcome to weather forecast!'}
-        )
+        context={'form': form, 'title': MESSAGES.get('main_header')}
+    )
 
 
 def main_statistic(request):
+    # Получение основной статистики по запросам погоды для пользователя
     try:
         user = User.objects.get(username=request.user)
         stat = forecast_service.get_main_statistic(user)
-    except Exception:
-        stat = " "
+    except ObjectDoesNotExist:
+        stat = ''
+
     return render(
         request, 'main_statistic.html',
         context={
-            'title': 'Основная статистика запросов',
+            'title': MESSAGES.get('main_statistic_header'),
             'statistic': stat
         }
-        )
+    )
 
 
 def city_statistic(request):
+    # Получение статистики по запросам погоды для пользователя для каждого города
     try:
         user = User.objects.get(username=request.user)
         stat = forecast_service.get_city_statistic(user)
-    except Exception:
-        stat = " "
+    except ObjectDoesNotExist:
+        stat = ''
+
     return render(
         request, 'city_statistic.html',
         context={
-            'title': 'Статистика запросов по городам',
+            'title': MESSAGES.get('city_statistic_header'),
             'statistic': stat
         }
-        )
+    )
 
 
 def about(request):
-    return render(request, 'about.html', context={'title': 'About page'})
+    return render(
+        request,
+        'about.html',
+        context={'title': MESSAGES.get('about_header')}
+    )

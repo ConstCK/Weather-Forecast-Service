@@ -43,6 +43,7 @@ class CityService:
         result = ForecastRequest.objects.filter(user=user)
         if result:
             return result[0].city
+        return None
 
 
 class ForecastService:
@@ -92,15 +93,16 @@ class ForecastService:
         )
 
     @staticmethod
-    def get_main_statistic(user: User) -> list[dict[str, Any]] | None:
+    def get_main_statistic(user: User) -> list[dict[str, str | datetime.datetime]] | None:
         # Получение общей статистики запросов пользователя
         query = ForecastRequest.objects.filter(user=user)
         if query:
             result = [x for x in query.values('city', 'created_at')]
             return result
+        return None
 
     @staticmethod
-    def get_city_statistic(user: User) -> list[dict[str, Any]] | None:
+    def get_city_statistic(user: User) -> list[dict[str, str | int]] | None:
         # Получение статистики по количеству запросов для каждого города пользователя
         query = ForecastRequest.objects.filter(user=user).values('city')
         if query:
@@ -109,3 +111,4 @@ class ForecastService:
             ).order_by('-city_count')
             result = [x for x in query]
             return result
+        return None

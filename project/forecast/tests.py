@@ -1,38 +1,46 @@
 import datetime
 
 from django.contrib.auth.models import User
-from django.test import TestCase, RequestFactory, Client
+from django.test import TestCase
 from django.urls import reverse
 
-from accounts.forms import LoginForm, SignUpForm
-from .forms import ForecastOrderForm
-from accounts.views import sign_up, log_out, log_in
+from accounts.forms import LoginForm
+from .forms import ForecastRequestForm
 from .models import ForecastRequest
 
 
 class ForecastTest(TestCase):
     def setUp(self):
-        # Выполнение перед всеми тестами
+        # Выполнение перед всеми каждым из тестов
         self.user_form_data_1 = {'username': 'Ivanov', 'password': 'user1234'}
         self.user_form_data_2 = {'username': 'Ivanov', 'password': 'user'}
-        self.user_form_data_3 = {'username': 'Petrov',
-                                 'password1': 'user9876',
-                                 'password2': 'user9876'}
-        self.user_form_data_4 = {'username': 'Petrov',
-                                 'password1': 'user9876',
-                                 'password2': 'user9870'}
-        self.user_form_data_5 = {'username': 'Petrov',
-                                 'password1': '123',
-                                 'password2': '123'}
+        self.user_form_data_3 = {
+            'username': 'Petrov',
+            'password1': 'user9876',
+            'password2': 'user9876'
+        }
+        self.user_form_data_4 = {
+            'username': 'Petrov',
+            'password1': 'user9876',
+            'password2': 'user9870'
+        }
+        self.user_form_data_5 = {
+            'username': 'Petrov',
+            'password1': '123',
+            'password2': '123'
+        }
         self.forecast_form_data_1 = {'city': 'Moscow'}
         self.forecast_form_data_2 = {'city': 'M'}
         self.user = User.objects.create_user(
-            username='Ivanov', password='user1234')
-        self.model_data_1 = ForecastRequest.objects.create(user=self.user,
-                                                         city='London',
-                                                         city_lat=51.5085,
-                                                         city_lon=-0.1257,
-                                                         created_at=datetime.datetime.now())
+            username='Ivanov', password='user1234'
+        )
+        self.model_data_1 = ForecastRequest.objects.create(
+            user=self.user,
+            city='London',
+            city_lat=51.5085,
+            city_lon=-0.1257,
+            created_at=datetime.datetime.now()
+            )
 
     def test_model_creation(self):
         # Тест получения ранее созданной модели
@@ -41,12 +49,12 @@ class ForecastTest(TestCase):
 
     def test_forecast_form_validation_successful(self):
         # Проверка валидации формы запроса прогноза погоды
-        form = ForecastOrderForm(data=self.forecast_form_data_1)
+        form = ForecastRequestForm(data=self.forecast_form_data_1)
         self.assertTrue(form.is_valid())
 
     def test_forecast_form_validation_failed(self):
         # Проверка валидации формы запроса прогноза погоды
-        form = ForecastOrderForm(data=self.forecast_form_data_2)
+        form = ForecastRequestForm(data=self.forecast_form_data_2)
         self.assertFalse(form.is_valid())
 
     def test_login_form_validation_successful(self):
@@ -80,7 +88,8 @@ class ForecastTest(TestCase):
         # Проверка функции регистрации при правильном вводе данных
         response = self.client.post('/accounts/signup/', self.user_form_data_3)
         self.assertTemplateUsed(
-            response, 'registration/successful_registration.html')
+            response, 'registration/successful_registration.html'
+        )
 
     def test_signup_failed_1(self):
         # Проверка функции регистрации при неправильном вводе данных

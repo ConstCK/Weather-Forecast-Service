@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import main, main_statistic, about, city_statistic
+from .views import auto_complete_handler, main, main_statistic, about, city_statistic, CityAutocomplete
 
 urlpatterns = [
     path('', main, name='main'),
