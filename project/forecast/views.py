@@ -1,7 +1,5 @@
-from dal import autocomplete
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import JsonResponse
 from django.shortcuts import render
 
 from .constants import MESSAGES
