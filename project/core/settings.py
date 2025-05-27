@@ -12,7 +12,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', 'constkk.pythonanywhere.com']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -24,8 +24,6 @@ INSTALLED_APPS = [
     'sass_processor',
     'forecast.apps.ForecastConfig',
     'accounts.apps.AccountsConfig',
-    'dal',
-    'dal_select2',
 ]
 
 MIDDLEWARE = [

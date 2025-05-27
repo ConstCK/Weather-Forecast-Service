@@ -1,4 +1,5 @@
 {% extends 'default.html' %}
+{% load static %}
 {% block main %}
     {% if user.is_authenticated %}
         <h1 class="title">Введите город</h1>
@@ -6,6 +7,7 @@
             {% csrf_token %}
             <div class="city-label">{{ form.city.label }}</div>
             <div class="city-input">{{ form.city }}</div>
+            <datalist id="city-options"></datalist>
             <button class="auth-btn" type="submit">Получить прогноз</button>
         </form>
         {% if city %}
@@ -19,5 +21,6 @@
     {% else%}
         <div class="message">Авторизуйтесь для запроса прогноза погоды</div>
     {% endif %}
+    <script src="{% static 'js/main.js' %}"></script>
 {% endblock main %}
 

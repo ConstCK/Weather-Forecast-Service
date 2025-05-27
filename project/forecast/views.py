@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import JsonResponse
 from django.shortcuts import render
 
 from .constants import MESSAGES
@@ -118,3 +119,13 @@ def about(request):
         'about.html',
         context={'title': MESSAGES.get('about_header')}
     )
+
+
+def city_autocomplete(request):
+    query = request.GET.get('q', '')
+    cities = (
+        ForecastRequest.objects.filter(user=request.user, city__icontains=query)
+        .values_list('city', flat=True)
+    )
+    cities = set(cities)
+    return JsonResponse(list(cities), safe=False)

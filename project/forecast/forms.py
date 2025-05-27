@@ -1,10 +1,18 @@
 from django import forms
 
+from forecast.models import ForecastRequest
 
-class ForecastRequestForm(forms.Form):
-    city = forms.CharField(
-        label="Город",
-        min_length=2,
-        max_length=128,
-        error_messages={'required': ''},
-    )
+
+class ForecastRequestForm(forms.ModelForm):
+    class Meta:
+        model = ForecastRequest
+        fields = ['city']
+        widgets = {
+            'city': forms.TextInput(
+                attrs={
+                    'list': 'city-options',
+                    'id': 'id_city',
+                    'class': 'city-input'
+                }
+            )
+        }
